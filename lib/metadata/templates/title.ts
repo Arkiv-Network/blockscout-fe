@@ -60,10 +60,12 @@ const TEMPLATE_MAP: Record<Route['pathname'], string> = {
   '/advanced-filter': '%network_name% advanced filter',
   '/pools': '%network_name% DEX pools',
   '/pools/[hash]': '%network_name% pool details',
+  '/interop-messages': '%network_name% interop messages',
 
   // service routes, added only to make typescript happy
   '/login': '%network_name% login',
   '/sprite': '%network_name% SVG sprite',
+  '/chakra': '%network_name% Chakra UI showcase',
   '/api/metrics': '%network_name% node API prometheus metrics',
   '/api/monitoring/invalid-api-schema': '%network_name% node API prometheus metrics',
   '/api/log': '%network_name% node API request log',
@@ -72,7 +74,6 @@ const TEMPLATE_MAP: Record<Route['pathname'], string> = {
   '/api/csrf': '%network_name% node API CSRF token',
   '/api/healthz': '%network_name% node API health check',
   '/api/config': '%network_name% node API app config',
-  '/api/sprite': '%network_name% node API SVG sprite content',
 };
 
 const TEMPLATE_MAP_ENHANCED: Partial<Record<Route['pathname'], string>> = {

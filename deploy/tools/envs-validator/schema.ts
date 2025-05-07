@@ -46,7 +46,7 @@ import type { VerifiedContractsFilter } from '../../../types/api/contracts';
 import type { TxExternalTxsConfig } from '../../../types/client/externalTxsConfig';
 
 import { replaceQuotes } from '../../../configs/app/utils';
-import * as regexp from '../../../lib/regexp';
+import * as regexp from '../../../toolkit/utils/regexp';
 import type { IconName } from '../../../ui/shared/IconSvg';
 
 const protocols = [ 'http', 'https' ];
@@ -343,6 +343,17 @@ const rollupSchema = yup
         otherwise: (schema) => schema.test(
           'not-exist',
           'NEXT_PUBLIC_ROLLUP_OUTPUT_ROOTS_ENABLED can only be used if NEXT_PUBLIC_ROLLUP_TYPE is set to \'optimistic\' ',
+          value => value === undefined,
+        ),
+      }),
+    NEXT_PUBLIC_INTEROP_ENABLED: yup
+      .boolean()
+      .when('NEXT_PUBLIC_ROLLUP_TYPE', {
+        is: 'optimistic',
+        then: (schema) => schema,
+        otherwise: (schema) => schema.test(
+          'not-exist',
+          'NEXT_PUBLIC_INTEROP_ENABLED can only be used if NEXT_PUBLIC_ROLLUP_TYPE is set to \'optimistic\' ',
           value => value === undefined,
         ),
       }),

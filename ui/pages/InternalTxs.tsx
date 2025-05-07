@@ -1,4 +1,4 @@
-import { Hide, Show } from '@chakra-ui/react';
+import { Box } from '@chakra-ui/react';
 import React from 'react';
 
 import useIsMobile from 'lib/hooks/useIsMobile';
@@ -16,9 +16,9 @@ const InternalTxs = () => {
   const isMobile = useIsMobile();
 
   const { isError, isPlaceholderData, data, pagination } = useQueryWithPages({
-    resourceName: 'internal_txs',
+    resourceName: 'general:internal_txs',
     options: {
-      placeholderData: generateListStub<'internal_txs'>(
+      placeholderData: generateListStub<'general:internal_txs'>(
         INTERNAL_TX,
         50,
         {
@@ -42,12 +42,12 @@ const InternalTxs = () => {
 
   const content = data?.items ? (
     <>
-      <Show below="lg" ssr={ false }>
+      <Box hideFrom="lg">
         <InternalTxsList data={ data.items } isLoading={ isPlaceholderData }/>
-      </Show>
-      <Hide below="lg" ssr={ false }>
+      </Box>
+      <Box hideBelow="lg">
         <InternalTxsTable data={ data.items } isLoading={ isPlaceholderData }/>
-      </Hide>
+      </Box>
     </>
   ) : null;
 
@@ -59,11 +59,12 @@ const InternalTxs = () => {
       />
       <DataListDisplay
         isError={ isError }
-        items={ data?.items }
+        itemsNum={ data?.items.length }
         emptyText="There are no internal transactions."
-        content={ content }
         actionBar={ actionBar }
-      />
+      >
+        { content }
+      </DataListDisplay>
     </>
   );
 };
