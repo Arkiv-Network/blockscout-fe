@@ -39,10 +39,22 @@ const BlockCountdown = ({ hideCapybaraRunner }: Props) => {
     },
   });
 
+  // Mock remaining blocks time
+  // TODO: remove when we have a testnet which outputs blocks reliably
+  if(data) {
+    data.result = {
+      EstimateTimeInSec: `${2 * Number(data?.result?.RemainingBlock)}`,
+      CountdownBlock: data?.result?.CountdownBlock as string,
+      CurrentBlock: data?.result?.CurrentBlock as string,
+      RemainingBlock: data?.result?.RemainingBlock as string
+    };
+  }
+
   const handleAddToAppleCalClick = React.useCallback(() => {
     if (!data?.result?.EstimateTimeInSec) {
       return;
     }
+
     const fileBlob = createIcsFileBlob({ blockHeight: height, date: dayjs().add(Number(data.result.EstimateTimeInSec), 's') });
     downloadBlob(fileBlob, `Block #${ height } creation event.ics`);
   }, [ data?.result?.EstimateTimeInSec, height ]);

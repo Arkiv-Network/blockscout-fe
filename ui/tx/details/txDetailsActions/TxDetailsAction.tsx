@@ -2,13 +2,15 @@ import { Flex, chakra } from '@chakra-ui/react';
 import BigNumber from 'bignumber.js';
 import React from 'react';
 
-import type { TxAction, TxActionGeneral } from 'types/api/txAction';
+import type { TxAction, TxActionGeneral, TxActionGolemBase, TxActionUniswap } from 'types/api/txAction';
 
 import config from 'configs/app';
 import AddressEntity from 'ui/shared/entities/address/AddressEntity';
 import NftEntity from 'ui/shared/entities/nft/NftEntity';
 import TokenEntity from 'ui/shared/entities/token/TokenEntity';
 import IconSvg from 'ui/shared/IconSvg';
+import TxEntity from 'ui/shared/entities/tx/TxEntity';
+import BlockEntity from 'ui/shared/entities/block/BlockEntity';
 
 interface Props {
   action: TxAction;
@@ -23,12 +25,8 @@ function getActionText(actionType: TxActionGeneral['type']) {
   }
 }
 
-const TxDetailsAction = ({ action }: Props) => {
-  const { protocol, type, data } = action;
-
-  if (protocol !== 'uniswap_v3') {
-    return null;
-  }
+function handleUniswapV3(action: TxActionUniswap) {
+  const { type, data } = action;
 
   switch (type) {
     case 'mint':
@@ -145,6 +143,63 @@ const TxDetailsAction = ({ action }: Props) => {
 
     default:
       return null;
+  }
+}
+
+function handleGolemBase(action: TxActionGolemBase) {
+  const { type, data } = action;
+  const entity_component = (
+    <TxEntity hash={ data.entity_id } truncation="constant" href={ `/golembase/entity/${data.entity_id}` } noIcon noCopy={ false }/>
+  );
+
+  switch (type) {
+    case 'golembase_entity_created':
+      return (
+        <Flex flexWrap="wrap" columnGap={ 2 } rowGap={ 2 } alignItems="center" fontWeight={ 500 }>
+          <chakra.span>Entity created:</chakra.span>
+          { entity_component }
+          <chakra.span>expiring at block</chakra.span>
+          <BlockEntity number={ data.expiration_block } />
+        </Flex>
+      );
+    case 'golembase_entity_updated':
+      return (
+        <Flex flexWrap="wrap" columnGap={ 2 } rowGap={ 2 } alignItems="center" fontWeight={ 500 }>
+          <chakra.span>Entity updated:</chakra.span>
+          { entity_component }
+          <chakra.span>expiring at block</chakra.span>
+          <BlockEntity number={ data.expiration_block } />
+        </Flex>
+      );
+    case 'golembase_entity_deleted':
+      return (
+        <Flex flexWrap="wrap" columnGap={ 2 } rowGap={ 2 } alignItems="center" fontWeight={ 500 }>
+          <chakra.span>Entity deleted:</chakra.span>
+          { entity_component }
+        </Flex>
+      );
+    case 'golembase_entity_ttl_extended':
+      return (
+        <Flex flexWrap="wrap" columnGap={ 2 } rowGap={ 2 } alignItems="center" fontWeight={ 500 }>
+          <chakra.span>Entity lifetime extended:</chakra.span>
+          { entity_component }
+          <chakra.span>from block</chakra.span>
+          <BlockEntity number={ data.old_expiration_block } />
+          <chakra.span>to block</chakra.span>
+          <BlockEntity number={ data.new_expiration_block } />
+        </Flex>
+      );
+    default:
+      return null;
+  }
+}
+
+const TxDetailsAction = ({ action }: Props) => {
+  switch(action.protocol) {
+    case 'uniswap_v3':
+      return handleUniswapV3(action);
+    case 'golembase':
+      return handleGolemBase(action);
   }
 };
 
