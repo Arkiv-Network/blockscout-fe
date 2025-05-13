@@ -21,18 +21,30 @@ export interface TxActionNft {
   };
 }
 
-export type TxGolemBaseAction = {
-  type: 'golembase_entity_created' | 'golembase_entity_updated';
+export type TxActionGolemBaseCreated = {
+  type: 'golembase_entity_created';
   data: {
     entity_id: string;
     expiration_block: number;
   };
-} | {
+}
+
+export type TxActionGolemBaseUpdated = {
+  type: 'golembase_entity_updated';
+  data: {
+    entity_id: string;
+    expiration_block: number;
+  };
+}
+
+export type TxActionGolemBaseDeleted = {
   type: 'golembase_entity_deleted';
   data: {
     entity_id: string,
   };
-} | {
+}
+
+export type TxActionGolemBaseTtlExtended = {
   type: 'golembase_entity_ttl_extended';
   data: {
     entity_id: string,
@@ -47,6 +59,11 @@ export type TxActionUniswap = {
 
 export type TxActionGolemBase = {
   protocol: 'golembase';
-} & TxGolemBaseAction;
+} & (
+  TxActionGolemBaseCreated
+  | TxActionGolemBaseUpdated
+  | TxActionGolemBaseDeleted
+  | TxActionGolemBaseTtlExtended
+);
 
 export type TxAction = TxActionUniswap | TxActionGolemBase;
