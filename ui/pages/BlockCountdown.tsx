@@ -39,6 +39,7 @@ const BlockCountdown = ({ hideCapybaraRunner }: Props) => {
   });
 
   // Mock remaining blocks time
+  // TODO: remove when we have a testnet which outputs blocks reliably
   if(data) {
     data.result = {
       EstimateTimeInSec: `${2 * Number(data?.result?.RemainingBlock)}`,
