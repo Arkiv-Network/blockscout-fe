@@ -46,7 +46,6 @@ const BlockCountdown = ({ hideCapybaraRunner }: Props) => {
       CurrentBlock: data?.result?.CurrentBlock as string,
       RemainingBlock: data?.result?.RemainingBlock as string
     };
-    console.log("bloo", data?.result?.RemainingBlock);
   }
 
   const handleAddToAppleCalClick = React.useCallback(() => {
